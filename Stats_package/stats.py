@@ -2,10 +2,6 @@
 class stats:
 
     def q_test(suspect, data):
-        #needs work
-        #sort data into ascending order
-        #apply qtest
-        #compare
         gap = 0
         try:
             if len(data) <=2:
