@@ -7,6 +7,53 @@ import smtplib
 import SETTINGS
 import FUNCTIONS
 
+def GET_VAC_VALUE(dev):
+    values = []
+    smaples = SETTINGS.SAMPLES
+    max_val = SETTINGS.MAX_VAC_PRESSURE
+    if type(dev) == type([]):
+        values_pair = []
+        for i in range(len(dev)):
+            for _ in range(samples):
+                dev.write(''.encode())
+                time.sleep(1/samples)
+                val = dev.readline().decode('utf-8')
+                try:
+                    val = float(val)
+                    if val < max_val:
+                        values_pair.append(val)
+                    else:
+                        pass
+                except Exception as e:
+                    print(e)
+            values.append(values_pair)
+        return values
+    elif type(dev) == type(''):
+        for _ in range(samples):
+            dev.write(''.encode())
+            time.sleep(1/samples)
+            val = dev.readline().decode('utf-8')
+            try:
+                val = float(val)
+                if val < max_val:
+                    values.append(val)
+                else:
+                    pass
+            except Exception as e:
+                print(e)
+        return values
+    else:
+        pass
+
+def CALIBRATE_VACUUM_INIT():
+    com = 'com1'
+    baud = 9600
+    bytes = 8
+    parity = 'N'
+    stopbits = 1
+    dev = serial.Serial(com,baud,bytes,parity,stopbits,timeout=1)
+    return  dev
+
 def CALIBRATE_VACUUM():
     input("Press enter to being")
     REF_lst = []
@@ -17,8 +64,9 @@ def CALIBRATE_VACUUM():
         if cmd.upper() == 'Q':
             break
         else:
-            REF = input('Enter reference vacuum (mtorr): ')
             ACT = input('Enter actual vacuum (mtorr): ')
+            REF = input('Enter reference vacuum (mtorr): ')
+            GET_VAC_VALUE(dev)
             try:
                 if abs(float(REF) - float(ACT)) > tol:
                     pass
