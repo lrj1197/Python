@@ -6,6 +6,10 @@ import pyodbc
 import smtplib
 import SETTINGS
 import FUNCTIONS
+"""
+This handels the vacuum part of the program
+"""
+
 
 def GET_VAC_VALUE(dev):
     values = []
